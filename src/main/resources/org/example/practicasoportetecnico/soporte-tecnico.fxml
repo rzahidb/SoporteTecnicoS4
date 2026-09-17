@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.practicasoportetecnico.SoporteTecnicoController"
+      alignment="TOP_CENTER"
+      prefHeight="720.0"
+      prefWidth="750.0"
+      spacing="18.0">
+
+    <padding>
+        <Insets top="25.0"
+                right="35.0"
+                bottom="25.0"
+                left="35.0"/>
+    </padding>
+
+    <Label text="Solicitud de Servicio"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="15.0"
+              vgap="15.0">
+
+        <!-- Cliente -->
+        <Label text="Cliente:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="0"/>
+
+        <TextField fx:id="txtCliente"
+                   promptText="Nombre del cliente"
+                   prefWidth="380.0"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="0"/>
+
+        <!-- Correo -->
+        <Label text="Correo del cliente:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="1"/>
+
+        <TextField fx:id="txtCorreoCliente"
+                   promptText="Correo del cliente"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="1"/>
+
+        <!-- Tipo cliente -->
+        <Label text="Tipo de cliente:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="2"/>
+
+        <TextField fx:id="txtTipoCliente"
+                   promptText="Tipo de cliente"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+
+        <!-- Asunto -->
+        <Label text="Asunto:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="3"/>
+
+        <TextField fx:id="txtAsunto"
+                   promptText="Ingrese el asunto"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="3"/>
+
+        <!-- Tipo servicio -->
+        <Label text="Tipo de servicio:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="4"/>
+
+        <ComboBox fx:id="cmbTipoServicio"
+                  promptText="Seleccione el tipo de servicio"
+                  prefWidth="380.0"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="4"/>
+
+        <!-- Prioridad -->
+        <Label text="Prioridad:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="5"/>
+
+        <HBox spacing="15.0"
+              GridPane.columnIndex="1"
+              GridPane.rowIndex="5">
+
+            <RadioButton fx:id="rbBaja"
+                         text="Baja"/>
+
+            <RadioButton fx:id="rbMedia"
+                         text="Media"/>
+
+            <RadioButton fx:id="rbAlta"
+                         text="Alta"/>
+
+        </HBox>
+
+        <!-- Descripción -->
+        <Label text="Descripción del problema:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="6"/>
+
+        <TextArea fx:id="txtDescripcionProblema"
+                  promptText="Describa el problema"
+                  prefHeight="100.0"
+                  prefWidth="380.0"
+                  wrapText="true"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="6"/>
+
+        <!-- Archivo adjunto -->
+        <Label text="Archivo adjunto:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="7"/>
+
+        <HBox spacing="10.0"
+              GridPane.columnIndex="1"
+              GridPane.rowIndex="7">
+
+            <TextField fx:id="txtArchivoAdjunto"
+                       editable="false"
+                       promptText="Seleccione un archivo"
+                       prefWidth="270.0"/>
+
+            <Button text="Seleccionar"
+                    onAction="#seleccionarArchivo"/>
+
+        </HBox>
+
+        <!-- Carpeta evidencias -->
+        <Label text="Carpeta de evidencias:"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="8"/>
+
+        <HBox spacing="10.0"
+              GridPane.columnIndex="1"
+              GridPane.rowIndex="8">
+
+            <TextField fx:id="txtCarpetaEvidencias"
+                       editable="false"
+                       promptText="Seleccione una carpeta"
+                       prefWidth="270.0"/>
+
+            <Button text="Seleccionar"
+                    onAction="#seleccionarCarpeta"/>
+
+        </HBox>
+
+    </GridPane>
+
+    <!-- Botones -->
+    <HBox alignment="CENTER"
+          spacing="15.0">
+
+        <Button text="Guardar"
+                prefWidth="110.0"
+                onAction="#guardarSolicitud"/>
+
+        <Button text="Crear Solicitud"
+                prefWidth="130.0"
+                onAction="#crearSolicitud"/>
+
+        <Button text="Limpiar"
+                prefWidth="110.0"
+                onAction="#limpiarFormulario"/>
+
+        <Button text="Cerrar"
+                prefWidth="110.0"
+                onAction="#cerrarVentana"/>
+
+    </HBox>
+
+</VBox>
