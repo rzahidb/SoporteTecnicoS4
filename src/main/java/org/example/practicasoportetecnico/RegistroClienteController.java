@@ -9,11 +9,14 @@ import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.example.practicasoportetecnico.model.Cliente;
 
 import java.io.File;
 import java.io.IOException;
 
 public class RegistroClienteController {
+
+    private Cliente clienteGuardado;
 
     @FXML
     private TextField txtNombre;
@@ -131,31 +134,31 @@ public class RegistroClienteController {
             return;
         }
 
-        Alert confirmacion =
-                new Alert(Alert.AlertType.CONFIRMATION);
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
 
         confirmacion.setTitle("Confirmación");
-
-        confirmacion.setHeaderText(
-                "¿Desea guardar este cliente?"
-        );
-
-        confirmacion.setContentText(
-                "Cliente: " + txtNombre.getText()
-        );
+        confirmacion.setHeaderText("¿Desea guardar este cliente?");
+        confirmacion.setContentText("Cliente: " + txtNombre.getText());
 
         confirmacion.showAndWait().ifPresent(respuesta -> {
 
             if (respuesta == ButtonType.OK) {
 
-                Alert informacion =
-                        new Alert(Alert.AlertType.INFORMATION);
+                clienteGuardado = new Cliente(
+                        txtNombre.getText().trim(),
+                        txtCorreo.getText().trim(),
+                        txtTelefono.getText().trim(),
+                        cmbTipoCliente.getValue(),
+                        txtDocumento.getText(),
+                        txtDirectorio.getText()
+                );
+
+                Alert informacion = new Alert(Alert.AlertType.INFORMATION);
 
                 informacion.setTitle("Cliente guardado");
                 informacion.setHeaderText(null);
-
                 informacion.setContentText(
-                        "Cliente registrado correctamente."
+                        "Cliente registrado correctamente. Ya puede crear la solicitud de servicio."
                 );
 
                 informacion.showAndWait();
@@ -166,16 +169,14 @@ public class RegistroClienteController {
     @FXML
     private void crearSolicitud() throws IOException {
 
-        if (!validarFormulario()) {
+        if (clienteGuardado == null) {
 
-            Alert alerta =
-                    new Alert(Alert.AlertType.WARNING);
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
 
-            alerta.setTitle("Validación");
-            alerta.setHeaderText("Datos incompletos");
-
+            alerta.setTitle("Cliente no guardado");
+            alerta.setHeaderText("Debe guardar el cliente");
             alerta.setContentText(
-                    "Complete correctamente los datos del cliente antes de crear una solicitud."
+                    "Primero debe guardar los datos del cliente antes de crear una solicitud."
             );
 
             alerta.showAndWait();
@@ -188,14 +189,8 @@ public class RegistroClienteController {
 
         Scene scene = new Scene(loader.load());
 
-        SoporteTecnicoController controller =
-                loader.getController();
-
-        controller.cargarCliente(
-                txtNombre.getText(),
-                txtCorreo.getText(),
-                cmbTipoCliente.getValue()
-        );
+        SoporteTecnicoController controller = loader.getController();
+        controller.cargarCliente(clienteGuardado);
 
         Stage stage = new Stage();
 
@@ -214,6 +209,8 @@ public class RegistroClienteController {
         cmbTipoCliente.getSelectionModel().clearSelection();
         txtDocumento.clear();
         txtDirectorio.clear();
+
+        clienteGuardado = null;
     }
 
     @FXML

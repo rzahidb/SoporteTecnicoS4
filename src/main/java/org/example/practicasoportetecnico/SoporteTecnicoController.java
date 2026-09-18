@@ -7,10 +7,13 @@ import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.example.practicasoportetecnico.model.Cliente;
 
 import java.io.File;
 
 public class SoporteTecnicoController {
+
+    private Cliente cliente;
 
     @FXML
     private TextField txtCliente;
@@ -65,22 +68,25 @@ public class SoporteTecnicoController {
         rbAlta.setToggleGroup(grupoPrioridad);
     }
 
-    public void cargarCliente(
-            String nombre,
-            String correo,
-            String tipoCliente
-    ) {
+    public void cargarCliente(Cliente cliente) {
 
-        txtCliente.setText(nombre);
-        txtCorreoCliente.setText(correo);
-        txtTipoCliente.setText(tipoCliente);
+        this.cliente = cliente;
+
+        txtCliente.setText(cliente.getNombre());
+        txtCorreoCliente.setText(cliente.getCorreo());
+        txtTipoCliente.setText(cliente.getTipoCliente());
+
+        // Cuando el ticket viene desde RegistroCliente, estos datos
+        // pertenecen al cliente guardado y no deben modificarse.
+        txtCliente.setEditable(false);
+        txtCorreoCliente.setEditable(false);
+        txtTipoCliente.setEditable(false);
     }
 
     @FXML
     private void seleccionarArchivo() {
 
         FileChooser fc = new FileChooser();
-
         fc.setTitle("Seleccionar archivo adjunto");
 
         File archivo = fc.showOpenDialog(
@@ -97,13 +103,9 @@ public class SoporteTecnicoController {
     @FXML
     private void seleccionarCarpeta() {
 
-        DirectoryChooser dc =
-                new DirectoryChooser();
+        DirectoryChooser dc = new DirectoryChooser();
 
-        dc.setTitle(
-                "Seleccionar carpeta de evidencias"
-        );
-
+        dc.setTitle("Seleccionar carpeta de evidencias");
         dc.setInitialDirectory(
                 new File(System.getProperty("user.home"))
         );
@@ -124,20 +126,13 @@ public class SoporteTecnicoController {
 
     private boolean validarFormulario() {
 
-        String cliente =
-                txtCliente.getText().trim();
-
-        String correo =
-                txtCorreoCliente.getText().trim();
-
-        String asunto =
-                txtAsunto.getText().trim();
-
-        String descripcion =
-                txtDescripcionProblema.getText().trim();
+        String clienteNombre = txtCliente.getText().trim();
+        String correo = txtCorreoCliente.getText().trim();
+        String asunto = txtAsunto.getText().trim();
+        String descripcion = txtDescripcionProblema.getText().trim();
 
         boolean clienteValido =
-                cliente.matches("[\\p{L} ]{3,}");
+                clienteNombre.matches("[\\p{L} ]{3,}");
 
         boolean correoValido =
                 correo.matches(
@@ -166,15 +161,10 @@ public class SoporteTecnicoController {
 
         if (!validarFormulario()) {
 
-            Alert alerta =
-                    new Alert(Alert.AlertType.WARNING);
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
 
             alerta.setTitle("Validación");
-
-            alerta.setHeaderText(
-                    "Datos incorrectos"
-            );
-
+            alerta.setHeaderText("Datos incorrectos");
             alerta.setContentText(
                     "Verifique que todos los campos estén completos y sean válidos."
             );
@@ -183,18 +173,12 @@ public class SoporteTecnicoController {
             return;
         }
 
-        Alert confirmacion =
-                new Alert(Alert.AlertType.CONFIRMATION);
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
 
         confirmacion.setTitle("Confirmación");
-
-        confirmacion.setHeaderText(
-                "¿Desea crear esta solicitud?"
-        );
-
+        confirmacion.setHeaderText("¿Desea crear esta solicitud?");
         confirmacion.setContentText(
-                "Cliente: " +
-                        txtCliente.getText()
+                "Cliente: " + txtCliente.getText()
         );
 
         confirmacion.showAndWait()
@@ -202,19 +186,15 @@ public class SoporteTecnicoController {
 
                     if (respuesta == ButtonType.OK) {
 
-                        Alert informacion =
-                                new Alert(
-                                        Alert.AlertType.INFORMATION
-                                );
-
-                        informacion.setTitle(
-                                "Solicitud creada"
+                        Alert informacion = new Alert(
+                                Alert.AlertType.INFORMATION
                         );
 
+                        informacion.setTitle("Solicitud creada");
                         informacion.setHeaderText(null);
-
                         informacion.setContentText(
-                                "La solicitud se creó correctamente."
+                                "La solicitud se creó correctamente para "
+                                        + txtCliente.getText() + "."
                         );
 
                         informacion.showAndWait();
@@ -227,12 +207,10 @@ public class SoporteTecnicoController {
 
         if (!validarFormulario()) {
 
-            Alert alerta =
-                    new Alert(Alert.AlertType.WARNING);
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
 
             alerta.setTitle("Validación");
             alerta.setHeaderText("Datos incorrectos");
-
             alerta.setContentText(
                     "Complete correctamente todos los campos."
             );
@@ -241,15 +219,13 @@ public class SoporteTecnicoController {
             return;
         }
 
-        Alert alerta =
-                new Alert(Alert.AlertType.INFORMATION);
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
 
         alerta.setTitle("Guardar");
-
         alerta.setHeaderText(null);
-
         alerta.setContentText(
-                "Datos de la solicitud guardados."
+                "Datos de la solicitud guardados para el cliente "
+                        + txtCliente.getText() + "."
         );
 
         alerta.showAndWait();
@@ -258,9 +234,15 @@ public class SoporteTecnicoController {
     @FXML
     private void limpiarFormulario() {
 
-        txtCliente.clear();
-        txtCorreoCliente.clear();
-        txtTipoCliente.clear();
+        // Si el ticket fue abierto desde RegistroCliente, los datos
+        // del cliente guardado se conservan. Si se abrió desde el menú,
+        // también se limpian porque fueron ingresados manualmente.
+        if (cliente == null) {
+            txtCliente.clear();
+            txtCorreoCliente.clear();
+            txtTipoCliente.clear();
+        }
+
         txtAsunto.clear();
 
         cmbTipoServicio
